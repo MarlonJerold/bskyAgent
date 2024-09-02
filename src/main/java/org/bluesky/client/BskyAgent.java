@@ -1,7 +1,9 @@
 package org.bluesky.client;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
+import org.bluesky.model.Profile;
 import org.bluesky.util.DateUtil;
 import org.json.JSONObject;
 
@@ -12,6 +14,8 @@ public class BskyAgent {
     private static final String DID_URL = "https://bsky.social/xrpc/com.atproto.identity.resolveHandle";
     private static final String API_KEY_URL = "https://bsky.social/xrpc/com.atproto.server.createSession";
     private static final String POST_FEED_URL = "https://bsky.social/xrpc/com.atproto.repo.createRecord";
+    private static final String GET_PROFILE_URL = "https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile";
+
     private final OkHttpClient client = new OkHttpClient();
     private String token;
 
@@ -100,4 +104,38 @@ public class BskyAgent {
         }
     }
 
+    public Profile getProfile() throws IOException {
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+
+        String urlWithParams = HttpUrl.parse(GET_PROFILE_URL)
+                .newBuilder()
+                .addQueryParameter("actor", "patinho.tech")
+                .build()
+                .toString();
+
+        Request request = new Request.Builder()
+                .url(urlWithParams)
+                .get()
+                .addHeader("Accept", "application/json")
+                .addHeader("Authorization","Bearer " + token )
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                String responseBody = response.body().string();
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                Profile profile = objectMapper.readValue(responseBody, Profile.class);
+
+                return profile;
+            } else {
+                System.out.println("Erro: " + response.code() + " - " + response.message());
+                if (response.body() != null) {
+                    System.out.println("Corpo do Erro: " + response.body().string());
+                }
+                return null;
+            }
+        }
+    }
 }
