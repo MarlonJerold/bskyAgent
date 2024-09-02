@@ -1,8 +1,8 @@
 package org.bluesky.client;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
+import org.bluesky.BskyApiClient;
 import org.bluesky.model.Profile;
 import org.bluesky.util.DateUtil;
 import org.json.JSONObject;
@@ -11,10 +11,7 @@ import java.io.IOException;
 
 public class BskyAgent {
 
-    private static final String DID_URL = "https://bsky.social/xrpc/com.atproto.identity.resolveHandle";
-    private static final String API_KEY_URL = "https://bsky.social/xrpc/com.atproto.server.createSession";
-    private static final String POST_FEED_URL = "https://bsky.social/xrpc/com.atproto.repo.createRecord";
-    private static final String GET_PROFILE_URL = "https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile";
+    BskyApiClient apiClientUrl = BskyApiClient.getInstance();
 
     private final OkHttpClient client = new OkHttpClient();
     private String token;
@@ -25,7 +22,7 @@ public class BskyAgent {
     }
 
     private String resolveHandle(String handle) throws IOException {
-        HttpUrl url = HttpUrl.parse(DID_URL).newBuilder()
+        HttpUrl url = HttpUrl.parse(apiClientUrl.getDidUrl()).newBuilder()
                 .addQueryParameter("handle", handle)
                 .build();
 
@@ -56,7 +53,7 @@ public class BskyAgent {
         );
 
         Request request = new Request.Builder()
-                .url(API_KEY_URL)
+                .url(apiClientUrl.getApiKeyUrl())
                 .post(body)
                 .build();
 
@@ -89,7 +86,7 @@ public class BskyAgent {
         );
 
         Request request = new Request.Builder()
-                .url(POST_FEED_URL)
+                .url(apiClientUrl.getPostFeedUrl())
                 .post(body)
                 .addHeader("Authorization", "Bearer " + token)
                 .build();
@@ -108,7 +105,7 @@ public class BskyAgent {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
 
-        String urlWithParams = HttpUrl.parse(GET_PROFILE_URL)
+        String urlWithParams = HttpUrl.parse(apiClientUrl.getGetProfileUrl())
                 .newBuilder()
                 .addQueryParameter("actor", "patinho.tech")
                 .build()
@@ -127,7 +124,6 @@ public class BskyAgent {
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 Profile profile = objectMapper.readValue(responseBody, Profile.class);
-
                 return profile;
             } else {
                 System.out.println("Erro: " + response.code() + " - " + response.message());
