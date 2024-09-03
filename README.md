@@ -9,9 +9,9 @@ BskyAgent é uma biblioteca Java para interagir com o Bsky API, permitindo auten
   - [Instalação](#instalação)
   - [Uso](#uso)
     - [Autenticação](#autenticação)
-    - [Post](#post)
-    - [Profile](#profile)
-    - [Consultar a Thread de um Post](#consultar-a-thread-de-um-post)
+    - [CreatePost](#createpost)
+    - [GetProfile](#getprofile)
+    - [GetPostThread](#getpostthread)
   - [Exceções e Tratamento de Erros](#exceções-e-tratamento-de-erros)
   - [Contribuindo](#contribuindo)
   - [Licença](#licença)
@@ -42,13 +42,13 @@ String appPassword = "sua-senha-de-app";
 BskyAgent agent = new BskyAgent(handle, appPassword);
 ```
 
-#### Post
+#### CreatePost
 ```java
 String texto = "Olá, Bsky!";
 agent.createPost(texto);
 ```
 
-#### Profile
+#### GetProfile
 ```java
 String actor = "patinho.tech"
 agent.getProfile(String actor)
@@ -60,7 +60,7 @@ String actor = "patinho.tech"
 Profile profile = agent.getProfile("patinho.tech");
 ```
 
-### Consultar a Thread de um Post
+### GetPostThread
 
 ```java
 agent.getPostThread("url do Post");
