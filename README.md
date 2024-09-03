@@ -61,6 +61,12 @@ String texto = "Olá, Bsky!";
 agent.createPost(texto);
 ```
 
+Consultar a Thread de um Post
+
+```java
+blueskyClient.getPostThread("url do Post");
+```
+
 ## Exceções e Tratamento de Erros
 BskyAgent lança IOException em caso de falha nas requisições HTTP ou problemas na comunicação com a API. Certifique-se de tratar essas exceções adequadamente no seu código para lidar com falhas de rede ou respostas inesperadas da API.
 
