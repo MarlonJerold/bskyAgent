@@ -79,11 +79,6 @@ String texto = "Olá, Bsky!";
 agent.createPost(texto);
 ```
 
-```java
-String texto = "Olá, Bsky!";
-agent.createPost(texto);
-```
-
 Consultar a Thread de um Post
 
 ```java
