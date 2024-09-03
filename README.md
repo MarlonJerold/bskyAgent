@@ -60,7 +60,7 @@ String actor = "patinho.tech"
 Profile profile = agent.getProfile("patinho.tech");
 ```
 
-### GetPostThread
+#### GetPostThread
 
 ```java
 agent.getPostThread("url do Post");
