@@ -7,7 +7,6 @@ BskyAgent é uma biblioteca Java para interagir com o Bsky API, permitindo auten
 - [BskyAgent](#bskyagent)
   - [Requisitos](#requisitos)
   - [Instalação](#instalação)
-    - [Clonando o Repositório](#1-clone-o-repositório)
   - [Uso](#uso)
     - [Autenticação](#autenticação)
     - [Post](#post)
