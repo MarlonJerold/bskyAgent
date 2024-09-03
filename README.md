@@ -1,6 +1,6 @@
 # BskyAgent
 
-BskyAgent é uma que está sendo projetada para interagir com o Bsky API de forma simples e eficaz para aplicações que utilizam Java.
+BskyAgent é uma biblioteca que é e está sendo projetada para interagir com o Bsky API de forma simples e eficaz para aplicações que utilizam Java.
 
 # Sumário
 
