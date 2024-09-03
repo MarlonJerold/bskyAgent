@@ -61,10 +61,33 @@ String texto = "Olá, Bsky!";
 agent.createPost(texto);
 ```
 
+Consultar dados públicos referente a um perfil
+```java
+String actor = "patinho.tech"
+agent.getProfile(String actor)
+```
+Você irá precisar importar a classe Profile
+
+```java
+String actor = "patinho.tech"
+Profile profile = agent.getProfile("patinho.tech");
+```
+
+Criar um Post
+```java
+String texto = "Olá, Bsky!";
+agent.createPost(texto);
+```
+
+```java
+String texto = "Olá, Bsky!";
+agent.createPost(texto);
+```
+
 Consultar a Thread de um Post
 
 ```java
-blueskyClient.getPostThread("url do Post");
+agent.getPostThread("url do Post");
 ```
 
 ## Exceções e Tratamento de Erros
