@@ -15,10 +15,13 @@ public class BskyAgent {
 
     private final OkHttpClient client = new OkHttpClient();
     private String token;
+    public String handle;
 
     public BskyAgent(String handle, String appPassword) throws IOException {
         String did = resolveHandle(handle);
+        this.handle = handle;
         this.token = authenticate(did, appPassword);
+        System.out.println(token);
     }
 
     private String resolveHandle(String handle) throws IOException {
@@ -101,13 +104,13 @@ public class BskyAgent {
         }
     }
 
-    public Profile getProfile() throws IOException {
+    public Profile getProfile(String actor) throws IOException {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
 
         String urlWithParams = HttpUrl.parse(apiClientUrl.getGetProfileUrl())
                 .newBuilder()
-                .addQueryParameter("actor", "patinho.tech")
+                .addQueryParameter("actor", actor)
                 .build()
                 .toString();
 
@@ -134,4 +137,34 @@ public class BskyAgent {
             }
         }
     }
+
+    public void getPostThread(String atUri) throws IOException {
+
+        String did = DateUtil.extractDid(atUri);
+        Profile profile = getProfile(did);
+
+        HttpUrl urlRequest = HttpUrl.parse(apiClientUrl.getGetPostThreadUrl()).newBuilder()
+                .addQueryParameter("uri", DateUtil.formatString(profile.getDid(), DateUtil.extractPostId(atUri)))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(urlRequest)
+                .get()
+                .addHeader("Accept", "application/json")
+                .addHeader("Authorization","Bearer " + token )
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                String responseBody = response.body().string();
+                System.out.println(responseBody);
+            } else {
+                System.out.println("Erro: " + response.code() + " - " + response.message());
+                if (response.body() != null) {
+                    System.out.println("Corpo do Erro: " + response.body().string());
+                }
+            }
+        }
+    }
+
 }

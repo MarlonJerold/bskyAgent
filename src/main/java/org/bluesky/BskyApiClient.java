@@ -8,6 +8,7 @@ public class BskyApiClient {
     private static final String API_KEY_URL = "https://bsky.social/xrpc/com.atproto.server.createSession";
     private static final String POST_FEED_URL = "https://bsky.social/xrpc/com.atproto.repo.createRecord";
     private static final String GET_PROFILE_URL = "https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile";
+    private static final String GET_POST_THREAD = "https://public.api.bsky.app/xrpc/app.bsky.feed.getPostThread";
 
     private BskyApiClient() {
     }
@@ -37,5 +38,9 @@ public class BskyApiClient {
 
     public String getGetProfileUrl() {
         return GET_PROFILE_URL;
+    }
+
+    public String getGetPostThreadUrl() {
+        return GET_POST_THREAD;
     }
 }
