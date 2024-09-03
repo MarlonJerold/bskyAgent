@@ -2,11 +2,21 @@
 
 BskyAgent é uma biblioteca Java para interagir com o Bsky API, permitindo autenticação, criação de posts e recuperação de perfis de usuário. Esta biblioteca foi projetada para ser usada em aplicações Java que precisam se integrar com o Bsky de forma simples e eficaz.
 
-## Funcionalidades
+# Sumário
 
-- Autenticação com a API do Bsky usando identificadores e senhas de aplicativo.
-- Criação de posts no feed do Bsky.
-- Recuperação de perfis de usuário do Bsky.
+- [BskyAgent](#bskyagent)
+  - [Requisitos](#requisitos)
+  - [Instalação](#instalação)
+    - [Clonando o Repositório](#1-clone-o-repositório)
+  - [Uso](#uso)
+    - [Autenticação](#autenticação)
+    - [Post](#post)
+    - [Profile](#profile)
+    - [Consultar a Thread de um Post](#consultar-a-thread-de-um-post)
+  - [Exceções e Tratamento de Erros](#exceções-e-tratamento-de-erros)
+  - [Contribuindo](#contribuindo)
+  - [Licença](#licença)
+  - [Contato](#contato)
 
 ## Requisitos
 
@@ -17,32 +27,10 @@ BskyAgent é uma biblioteca Java para interagir com o Bsky API, permitindo auten
 
 ## Instalação
 
-1. Clone o repositório:
+### 1. Clone o repositório:
 
     ```bash
     git clone https://github.com/seu-usuario/bsky-agent.git
-    ```
-
-2. Adicione as dependências ao seu projeto Java. Se estiver usando Maven, adicione os seguintes elementos ao seu `pom.xml`:
-
-    ```xml
-    <dependencies>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.9.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20210307</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.13.0</version>
-        </dependency>
-    </dependencies>
     ```
 
 ## Uso
@@ -55,13 +43,13 @@ String appPassword = "sua-senha-de-app";
 BskyAgent agent = new BskyAgent(handle, appPassword);
 ```
 
-Criar um Post
+#### Post
 ```java
 String texto = "Olá, Bsky!";
 agent.createPost(texto);
 ```
 
-Consultar dados públicos referente a um perfil
+#### Profile
 ```java
 String actor = "patinho.tech"
 agent.getProfile(String actor)
@@ -73,13 +61,7 @@ String actor = "patinho.tech"
 Profile profile = agent.getProfile("patinho.tech");
 ```
 
-Criar um Post
-```java
-String texto = "Olá, Bsky!";
-agent.createPost(texto);
-```
-
-Consultar a Thread de um Post
+### Consultar a Thread de um Post
 
 ```java
 agent.getPostThread("url do Post");
@@ -108,5 +90,5 @@ Abra um pull request
 ## Licença
 Este projeto está licenciado sob a Licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
-Contato
+### Contato
 Para dúvidas, sugestões ou feedback, você pode entrar em contato através de jeroldmarlon5@gmail.com.
