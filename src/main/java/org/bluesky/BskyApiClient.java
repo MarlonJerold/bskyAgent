@@ -1,5 +1,7 @@
 package org.bluesky;
 
+import org.bluesky.model.Post;
+
 public class BskyApiClient {
 
     private static BskyApiClient instance;

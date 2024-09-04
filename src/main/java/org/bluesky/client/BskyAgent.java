@@ -4,13 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.bluesky.BskyApiClient;
 import org.bluesky.model.Profile;
-import org.bluesky.model.ThreadViewPost;
+import org.bluesky.service.PostService;
 import org.bluesky.util.DateUtil;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 public class BskyAgent {
 
@@ -25,6 +23,11 @@ public class BskyAgent {
         this.handle = handle;
         this.token = authenticate(did, appPassword);
         System.out.println(token);
+    }
+
+    public void createPost(String text) throws IOException {
+        PostService postService = new PostService(token, 60);
+        postService.createPost(text, handle);
     }
 
     private String resolveHandle(String handle) throws IOException {
@@ -74,39 +77,6 @@ public class BskyAgent {
         }
     }
 
-    public void createPost(String text, String handle) throws IOException {
-        JSONObject postBody = new JSONObject();
-        postBody.put("collection", "app.bsky.feed.post");
-        postBody.put("repo", handle);
-
-        JSONObject record = new JSONObject();
-        record.put("text", text);
-        record.put("createdAt", DateUtil.getCurrentISODate());
-        record.put("$type", "app.bsky.feed.post");
-
-        postBody.put("record", record);
-
-        RequestBody body = RequestBody.create(
-                postBody.toString(),
-                MediaType.parse("application/json; charset=utf-8")
-        );
-
-        Request request = new Request.Builder()
-                .url(apiClientUrl.getPostFeedUrl())
-                .post(body)
-                .addHeader("Authorization", "Bearer " + token)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-                System.out.println("Response: " + responseBody);
-            } else {
-                throw new IOException("Error in request: " + response.message());
-            }
-        }
-    }
-
     public Profile getProfile(String actor) throws IOException {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -141,7 +111,7 @@ public class BskyAgent {
         }
     }
 
-    public ThreadViewPost getPostThread(String atUri) throws IOException {
+    public void getPostThread(String atUri) throws IOException {
 
         String did = DateUtil.extractDid(atUri);
         Profile profile = getProfile(did);
@@ -162,46 +132,12 @@ public class BskyAgent {
                 String responseBody = response.body().string();
                 ObjectMapper objectMapper = new ObjectMapper();
 
-                ThreadViewPost threadViewPost = objectMapper.readValue(responseBody, ThreadViewPost.class);
-
-                // Acessar o post e a thread
-                ThreadViewPost.Thread thread = threadViewPost.getThread();
-                ThreadViewPost.Post post = thread.getPost();
-                List<ThreadViewPost> replies = thread.getReplies();
-
-                // Exibir detalhes do post
-                System.out.println("Post URI: " + post.getUri());
-                System.out.println("Post CID: " + post.getCid());
-                System.out.println("Post Reply Count: " + post.getReplyCount());
-                System.out.println("Post Repost Count: " + post.getRepostCount());
-                System.out.println("Post Like Count: " + post.getLikeCount());
-                System.out.println("Post Quote Count: " + post.getQuoteCount());
-                System.out.println("Post Indexed At: " + post.getIndexedAt());
-
-                System.out.println("Comments in the thread:");
-                printReplies(replies, objectMapper);
-
-                return threadViewPost;
+                System.out.println(responseBody);
             } else {
                 System.out.println("Erro: " + response.code() + " - " + response.message());
                 if (response.body() != null) {
                     System.out.println("Corpo do Erro: " + response.body().string());
                 }
-            }
-        }
-        return null;
-    }
-
-
-    private static void printReplies(List<ThreadViewPost> replies, ObjectMapper objectMapper) {
-        if (replies != null) {
-            for (ThreadViewPost replyThread : replies) {
-                ThreadViewPost.Post replyPost = replyThread.getThread().getPost();
-                System.out.println("  - Reply Post URI: " + replyPost.getUri());
-                System.out.println("    Reply Post CID: " + replyPost.getCid());
-                System.out.println("    Reply Post Text: " + replyPost.getRecord().getText());
-                // Recursivamente imprimir replies se houver
-                printReplies(replyThread.getThread().getReplies(), objectMapper);
             }
         }
     }
