@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.bluesky.BskyApiClient;
 import org.bluesky.model.Profile;
+import org.bluesky.service.PostService;
 import org.bluesky.util.DateUtil;
 import org.json.JSONObject;
 
@@ -22,6 +23,11 @@ public class BskyAgent {
         this.handle = handle;
         this.token = authenticate(did, appPassword);
         System.out.println(token);
+    }
+
+    public void createPost(String text) throws IOException {
+        PostService postService = new PostService(token, 60);
+        postService.createPost(text, handle);
     }
 
     private String resolveHandle(String handle) throws IOException {
@@ -71,39 +77,6 @@ public class BskyAgent {
         }
     }
 
-    public void createPost(String text) throws IOException {
-        JSONObject postBody = new JSONObject();
-        postBody.put("collection", "app.bsky.feed.post");
-        postBody.put("repo", "patinho.tech");
-
-        JSONObject record = new JSONObject();
-        record.put("text", text);
-        record.put("createdAt", DateUtil.getCurrentISODate());
-        record.put("$type", "app.bsky.feed.post");
-
-        postBody.put("record", record);
-
-        RequestBody body = RequestBody.create(
-                postBody.toString(),
-                MediaType.parse("application/json; charset=utf-8")
-        );
-
-        Request request = new Request.Builder()
-                .url(apiClientUrl.getPostFeedUrl())
-                .post(body)
-                .addHeader("Authorization", "Bearer " + token)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-                System.out.println("Response: " + responseBody);
-            } else {
-                throw new IOException("Error in request: " + response.message());
-            }
-        }
-    }
-
     public Profile getProfile(String actor) throws IOException {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -118,7 +91,7 @@ public class BskyAgent {
                 .url(urlWithParams)
                 .get()
                 .addHeader("Accept", "application/json")
-                .addHeader("Authorization","Bearer " + token )
+                .addHeader("Authorization", "Bearer " + token)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
@@ -151,12 +124,14 @@ public class BskyAgent {
                 .url(urlRequest)
                 .get()
                 .addHeader("Accept", "application/json")
-                .addHeader("Authorization","Bearer " + token )
+                .addHeader("Authorization", "Bearer " + token)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
+                ObjectMapper objectMapper = new ObjectMapper();
+
                 System.out.println(responseBody);
             } else {
                 System.out.println("Erro: " + response.code() + " - " + response.message());
