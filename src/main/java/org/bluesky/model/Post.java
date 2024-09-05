@@ -9,6 +9,10 @@ public class Post {
         this.handle = handle;
     }
 
+    public Post(String text) {
+        this(text, null);
+    }
+
     public String getText() {
         return text;
     }

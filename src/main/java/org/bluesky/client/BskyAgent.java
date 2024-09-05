@@ -3,15 +3,13 @@ package org.bluesky.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.bluesky.BskyApiClient;
-import org.bluesky.model.Post;
 import org.bluesky.model.Profile;
 import org.bluesky.service.PostService;
 import org.bluesky.util.DateUtil;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+
 
 public class BskyAgent {
 
@@ -25,11 +23,11 @@ public class BskyAgent {
         String did = resolveHandle(handle);
         this.handle = handle;
         this.token = authenticate(did, appPassword);
-        System.out.println(token);
     }
 
+
     public void createPost(String text) throws IOException {
-        PostService postService = new PostService(token, 60);
+        PostService postService = new PostService(token);
         postService.createPost(text, handle);
     }
 
@@ -142,5 +140,4 @@ public class BskyAgent {
             }
         }
     }
-
 }
