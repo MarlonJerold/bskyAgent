@@ -28,9 +28,9 @@ BskyAgent é uma biblioteca que é e está sendo projetada para interagir com o 
 
 ### 1. Clone o repositório:
 
-    ```bash
-    git clone https://github.com/seu-usuario/bsky-agent.git
-    ```
+```bash
+    git clone https://github.com/MarlonJerold/bskyAgent.git
+```
 
 ## Uso
 
