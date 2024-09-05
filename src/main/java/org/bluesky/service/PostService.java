@@ -15,20 +15,22 @@ public class PostService {
 
     private final OkHttpClient client;
     private final String token;
-
-    BskyApiClient apiClientUrl = BskyApiClient.getInstance();
     private final ExecutorService executor;
+    private final BskyApiClient apiClientUrl;
 
     public PostService(String token, int poolSize) {
         this.token = token;
         this.executor = Executors.newFixedThreadPool(poolSize);
         this.client = new OkHttpClient.Builder()
-                .connectionPool(new ConnectionPool(7, 5, TimeUnit.MINUTES)) // Configuração de pool de conexões
+                .connectionPool(new ConnectionPool(20, 5, TimeUnit.MINUTES)) // Configuração de pool de conexões
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
                 .build();
+        this.apiClientUrl = BskyApiClient.getInstance();
     }
 
     public void createPost(String text, String handle) throws IOException {
-
         JSONObject postBody = new JSONObject();
         postBody.put("collection", "app.bsky.feed.post");
         postBody.put("repo", handle);
@@ -52,12 +54,7 @@ public class PostService {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-                System.out.println("Response: " + responseBody);
-            } else {
-                throw new IOException("Error in request: " + response.message());
-            }
+            if (!response.isSuccessful()) throw new IOException("Error in request: " + response.message());
         }
     }
 
@@ -80,7 +77,7 @@ public class PostService {
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException("Error executing posts in parallel", e);
         } finally {
-            executor.shutdown(); // Encerra o executor quando não for mais necessário
+            executor.shutdown();
         }
     }
 

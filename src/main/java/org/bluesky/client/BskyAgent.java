@@ -3,12 +3,15 @@ package org.bluesky.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.bluesky.BskyApiClient;
+import org.bluesky.model.Post;
 import org.bluesky.model.Profile;
 import org.bluesky.service.PostService;
 import org.bluesky.util.DateUtil;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class BskyAgent {
 
@@ -34,12 +37,10 @@ public class BskyAgent {
         HttpUrl url = HttpUrl.parse(apiClientUrl.getDidUrl()).newBuilder()
                 .addQueryParameter("handle", handle)
                 .build();
-
         Request request = new Request.Builder()
                 .url(url)
                 .get()
                 .build();
-
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
