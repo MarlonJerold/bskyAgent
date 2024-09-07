@@ -25,16 +25,7 @@ public class PostService {
 
     public void createPost(String text, String handle) throws IOException {
 
-        JSONObject postBody = new JSONObject();
-        postBody.put("collection", "app.bsky.feed.post");
-        postBody.put("repo", handle);
-
-        JSONObject record = new JSONObject();
-        record.put("text", text);
-        record.put("createdAt", DateUtil.getCurrentISODate());
-        record.put("$type", "app.bsky.feed.post");
-
-        postBody.put("record", record);
+        JSONObject postBody = JsonBuilderService.createPostJson(text, handle);
 
         try (Response response = httpClientService.sendPostRequest(apiClientUrl.getPostFeedUrl(), postBody, token)) {
             if (!response.isSuccessful()) throw new IOException("Error in request: " + response.message());

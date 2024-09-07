@@ -15,7 +15,7 @@ public class Main {
             String appPassword = "";
 
             BskyAgent agent = new BskyAgent(handle, appPassword);
-            agent.createPost("Olá");
+            agent.createPost("Teste JSON BUILDER SERVICE POST");
 
         } catch (Exception e) {
             e.printStackTrace();
