@@ -15,15 +15,15 @@ public class PostService {
 
     private final String token;
     private final BskyApiClient apiClientUrl;
+    private final HttpClientService httpClientService;
 
     public PostService(String token) {
         this.token = token;
         this.apiClientUrl = BskyApiClient.getInstance();
+        this.httpClientService = new HttpClientService();
     }
 
     public void createPost(String text, String handle) throws IOException {
-        OkHttpClient client = new OkHttpClient().newBuilder()
-                .build();
 
         JSONObject postBody = new JSONObject();
         postBody.put("collection", "app.bsky.feed.post");
@@ -36,18 +36,7 @@ public class PostService {
 
         postBody.put("record", record);
 
-        RequestBody body = RequestBody.create(
-                postBody.toString(),
-                MediaType.parse("application/json; charset=utf-8")
-        );
-
-        Request request = new Request.Builder()
-                .url(apiClientUrl.getPostFeedUrl())
-                .post(body)
-                .addHeader("Authorization", "Bearer " + token)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = httpClientService.sendPostRequest(apiClientUrl.getPostFeedUrl(), postBody, token)) {
             if (!response.isSuccessful()) throw new IOException("Error in request: " + response.message());
         }
     }

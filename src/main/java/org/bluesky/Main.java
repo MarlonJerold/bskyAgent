@@ -12,11 +12,10 @@ public class Main {
     public static void main(String[] args) throws IOException {
         try {
             String handle = "testedopato.bsky.social";
-            String appPassword = "r2v6-lwj3-kdf6-bbm6";
+            String appPassword = "";
 
             BskyAgent agent = new BskyAgent(handle, appPassword);
             agent.createPost("Olá");
-
 
         } catch (Exception e) {
             e.printStackTrace();
