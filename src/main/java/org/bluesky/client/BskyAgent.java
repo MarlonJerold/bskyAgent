@@ -5,6 +5,7 @@ import okhttp3.*;
 import org.bluesky.BskyApiClient;
 import org.bluesky.model.Profile;
 import org.bluesky.service.PostService;
+import org.bluesky.service.ProfileService;
 import org.bluesky.util.DateUtil;
 import org.json.JSONObject;
 
@@ -25,10 +26,14 @@ public class BskyAgent {
         this.token = authenticate(did, appPassword);
     }
 
-
     public void createPost(String text) throws IOException {
         PostService postService = new PostService(token);
         postService.createPost(text, handle);
+    }
+
+    public Profile getProfile(String actor) throws IOException {
+        ProfileService profileService = new ProfileService(token, actor);
+        return profileService.getProfile();
     }
 
     private String resolveHandle(String handle) throws IOException {
@@ -76,39 +81,7 @@ public class BskyAgent {
         }
     }
 
-    public Profile getProfile(String actor) throws IOException {
-        OkHttpClient client = new OkHttpClient().newBuilder()
-                .build();
 
-        String urlWithParams = HttpUrl.parse(apiClientUrl.getGetProfileUrl())
-                .newBuilder()
-                .addQueryParameter("actor", actor)
-                .build()
-                .toString();
-
-        Request request = new Request.Builder()
-                .url(urlWithParams)
-                .get()
-                .addHeader("Accept", "application/json")
-                .addHeader("Authorization", "Bearer " + token)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-
-                ObjectMapper objectMapper = new ObjectMapper();
-                Profile profile = objectMapper.readValue(responseBody, Profile.class);
-                return profile;
-            } else {
-                System.out.println("Erro: " + response.code() + " - " + response.message());
-                if (response.body() != null) {
-                    System.out.println("Corpo do Erro: " + response.body().string());
-                }
-                return null;
-            }
-        }
-    }
 
     public void getPostThread(String atUri) throws IOException {
 
@@ -140,4 +113,5 @@ public class BskyAgent {
             }
         }
     }
+
 }

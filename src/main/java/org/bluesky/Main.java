@@ -11,11 +11,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         try {
-            String handle = "testedopato.bsky.social";
-            String appPassword = "";
-
-            BskyAgent agent = new BskyAgent(handle, appPassword);
-            agent.createPost("Teste JSON BUILDER SERVICE POST");
 
         } catch (Exception e) {
             e.printStackTrace();

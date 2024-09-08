@@ -2,6 +2,7 @@ package org.bluesky.service;
 
 import okhttp3.*;
 import org.bluesky.BskyApiClient;
+import org.bluesky.exception.PostRequestException;
 import org.bluesky.model.Post;
 import org.bluesky.util.DateUtil;
 import org.json.JSONObject;
@@ -24,11 +25,13 @@ public class PostService {
     }
 
     public void createPost(String text, String handle) throws IOException {
-
         JSONObject postBody = JsonBuilderService.createPostJson(text, handle);
-
         try (Response response = httpClientService.sendPostRequest(apiClientUrl.getPostFeedUrl(), postBody, token)) {
-            if (!response.isSuccessful()) throw new IOException("Error in request: " + response.message());
+            if (!response.isSuccessful()) {
+                throw new PostRequestException("Failed to create post. Status: " + response.code() + ", Message: " + response.message());
+            }
+        } catch (IOException e) {
+            throw new PostRequestException("Network error occurred while creating post", e);
         }
     }
 }

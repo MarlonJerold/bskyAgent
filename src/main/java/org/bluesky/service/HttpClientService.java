@@ -28,4 +28,28 @@ public class HttpClientService {
         return client.newCall(request).execute();
     }
 
+    public Response getProfileRequest(String url, String token, String actor) throws IOException {
+        String urlWithParams = buildUrlWithParams(url, "actor", actor);
+        Request request = buildGetRequest(urlWithParams, token);
+
+        return client.newCall(request).execute();
+    }
+
+    String buildUrlWithParams(String baseUrl, String paramName, String paramValue) {
+        return HttpUrl.parse(baseUrl)
+                .newBuilder()
+                .addQueryParameter(paramName, paramValue)
+                .build()
+                .toString();
+    }
+
+    Request buildGetRequest(String url, String token) {
+        return new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("Accept", "application/json")
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+    }
+
 }
