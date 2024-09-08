@@ -81,8 +81,6 @@ public class BskyAgent {
         }
     }
 
-
-
     public void getPostThread(String atUri) throws IOException {
 
         String did = DateUtil.extractDid(atUri);

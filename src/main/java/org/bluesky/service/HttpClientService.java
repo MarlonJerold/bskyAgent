@@ -4,6 +4,8 @@ import okhttp3.*;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpClientService {
 
@@ -18,29 +20,16 @@ public class HttpClientService {
                 jsonBody.toString(),
                 MediaType.parse("application/json; charset=utf-8")
         );
-
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .addHeader("Authorization", "Bearer " + token)
-                .build();
-
-        return client.newCall(request).execute();
+        return client.newCall(buildPostRequest(url,body,token )).execute();
     }
 
     public Response getProfileRequest(String url, String token, String actor) throws IOException {
-        String urlWithParams = buildUrlWithParams(url, "actor", actor);
-        Request request = buildGetRequest(urlWithParams, token);
+        Map<String, String> params = new HashMap<>();
+        params.put("actor", actor);
 
-        return client.newCall(request).execute();
-    }
+        String urlWithParams = buildUrlWithParams(url, params);
 
-    String buildUrlWithParams(String baseUrl, String paramName, String paramValue) {
-        return HttpUrl.parse(baseUrl)
-                .newBuilder()
-                .addQueryParameter(paramName, paramValue)
-                .build()
-                .toString();
+        return client.newCall(buildGetRequest(urlWithParams, token)).execute();
     }
 
     Request buildGetRequest(String url, String token) {
@@ -50,6 +39,23 @@ public class HttpClientService {
                 .addHeader("Accept", "application/json")
                 .addHeader("Authorization", "Bearer " + token)
                 .build();
+    }
+
+    public Request buildPostRequest(String url, RequestBody body, String token) {
+        return new Request.Builder()
+                .url(url)
+                .post(body)
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+    }
+
+    public static String buildUrlWithParams(String baseUrl, Map<String, String> queryParams) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl).newBuilder();
+
+        for (Map.Entry<String, String> entry : queryParams.entrySet()) {
+            urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
+        }
+        return urlBuilder.build().toString();
     }
 
 }
