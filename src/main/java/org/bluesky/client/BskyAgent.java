@@ -36,6 +36,12 @@ public class BskyAgent {
         return profileService.getProfile();
     }
 
+    public Response getPostThread(String atUri) throws IOException {
+        PostService postService = new PostService(token);
+        return postService.getPostThread(atUri);
+
+    }
+
     private String resolveHandle(String handle) throws IOException {
         HttpUrl url = HttpUrl.parse(apiClientUrl.getDidUrl()).newBuilder()
                 .addQueryParameter("handle", handle)
@@ -80,36 +86,4 @@ public class BskyAgent {
             }
         }
     }
-
-    public void getPostThread(String atUri) throws IOException {
-
-        String did = DateUtil.extractDid(atUri);
-        Profile profile = getProfile(did);
-
-        HttpUrl urlRequest = HttpUrl.parse(apiClientUrl.getGetPostThreadUrl()).newBuilder()
-                .addQueryParameter("uri", DateUtil.formatString(profile.getDid(), DateUtil.extractPostId(atUri)))
-                .build();
-
-        Request request = new Request.Builder()
-                .url(urlRequest)
-                .get()
-                .addHeader("Accept", "application/json")
-                .addHeader("Authorization", "Bearer " + token)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-                ObjectMapper objectMapper = new ObjectMapper();
-
-                System.out.println(responseBody);
-            } else {
-                System.out.println("Erro: " + response.code() + " - " + response.message());
-                if (response.body() != null) {
-                    System.out.println("Corpo do Erro: " + response.body().string());
-                }
-            }
-        }
-    }
-
 }

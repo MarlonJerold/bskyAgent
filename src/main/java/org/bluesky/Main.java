@@ -12,8 +12,7 @@ public class Main {
 
             BskyAgent agent = new BskyAgent("testedopato.bsky.social","bobinho");
             Profile profile = agent.getProfile("testedopato.bsky.social");
-            System.out.println(profile.getFollowersCount());
-            agent.createPost("Hello World");
+            System.out.println();
 
         } catch (Exception e) {
             e.printStackTrace();

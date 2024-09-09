@@ -32,7 +32,11 @@ public class HttpClientService {
         return client.newCall(buildGetRequest(urlWithParams, token)).execute();
     }
 
-    Request buildGetRequest(String url, String token) {
+    public Response buildGetResponse(String url, String token) throws IOException {
+        return client.newCall(buildGetRequest(url, token)).execute();
+    }
+
+    public Request buildGetRequest(String url, String token) {
         return new Request.Builder()
                 .url(url)
                 .get()
@@ -41,7 +45,7 @@ public class HttpClientService {
                 .build();
     }
 
-    public Request buildPostRequest(String url, RequestBody body, String token) {
+    private Request buildPostRequest(String url, RequestBody body, String token) {
         return new Request.Builder()
                 .url(url)
                 .post(body)
@@ -49,7 +53,7 @@ public class HttpClientService {
                 .build();
     }
 
-    public static String buildUrlWithParams(String baseUrl, Map<String, String> queryParams) {
+    private static String buildUrlWithParams(String baseUrl, Map<String, String> queryParams) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl).newBuilder();
 
         for (Map.Entry<String, String> entry : queryParams.entrySet()) {
@@ -57,5 +61,4 @@ public class HttpClientService {
         }
         return urlBuilder.build().toString();
     }
-
 }
