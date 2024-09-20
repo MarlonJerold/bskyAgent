@@ -20,9 +20,8 @@ BskyAgent é uma biblioteca que é e está sendo projetada para interagir com o 
 ## Requisitos
 
 - Java 8 ou superior.
-- [OkHttp](https://square.github.io/okhttp/) para realizar requisições HTTP.
-- [JSON-java](https://github.com/stleary/JSON-java) para manipulação de JSON.
-- [Jackson](https://github.com/FasterXML/jackson) para deserialização de JSON em objetos Java.
+- Maven
+- Arquivo pom.xml
 
 ## Instalação
 
