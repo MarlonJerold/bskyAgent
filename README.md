@@ -32,6 +32,25 @@ BskyAgent é uma biblioteca que é e está sendo projetada para interagir com o 
     git clone https://github.com/MarlonJerold/bskyAgent.git
 ```
 
+Navegue até o projeto 
+```java
+cd bskyAgent
+```
+Rode o seguinte comando, certifique que você tenha o Maven instalado em seu ambiente:
+
+```java
+mvn clean install
+```
+
+Adicionar dependência em arquivo `pom.xml`:
+
+
+    <dependency>
+        <groupId>org.bluesky</groupId>
+        <artifactId>bluesky-library</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+
 ## Uso
 
 ### Autenticação
