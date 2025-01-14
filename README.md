@@ -108,4 +108,4 @@ Abra um pull request
 Este projeto está licenciado sob a Licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
 ### Contato
-Para dúvidas, sugestões ou feedback, você pode entrar em contato através de jeroldmarlon5@gmail.com.
+Para dúvidas, sugestões ou feedback, você pode entrar em contato através de marlonjerold@outlook.com.br
