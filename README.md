@@ -19,7 +19,7 @@ BskyAgent é uma biblioteca que é e está sendo projetada para interagir com o 
 
 ## Requisitos
 
-- Java 8 ou superior.
+- Java 22.
 - Maven
 - Arquivo pom.xml
 
